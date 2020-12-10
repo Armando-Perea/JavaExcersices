@@ -1,4 +1,4 @@
-package com.java.excersices;
+package com.java.exercises;
 
 /**
  * Hello world!
@@ -39,4 +39,6 @@ public class App {
 		// syso + barra + enter = system.out
 		// IDENTAR --> cnltr+a seguido de cntrl+shift+f
 	}
+	
+	
 }
