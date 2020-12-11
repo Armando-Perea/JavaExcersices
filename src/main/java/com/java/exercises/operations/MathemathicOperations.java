@@ -30,13 +30,25 @@ public class MathemathicOperations {
 		return message;
 	}
 	
+	public double getSmall(double numA, double numB) {
+		double smallNumber;
+		
+		if(numA<numB) {
+			smallNumber = numA;
+		}else {
+			smallNumber = numB;
+		}
+
+		return smallNumber;
+	}
+	
 	// char byte int float double long
 	public static void main(String [] args ) {
 		MathemathicOperations operation = new MathemathicOperations();
 		double result;
 		String message;
-		message = operation.findNumberTen(1);
-		System.out.println("Mensaje: "+message);
+		result = operation.getSmall(5, 10);
+		System.out.println("result: "+result);
 		
 	}
 	
