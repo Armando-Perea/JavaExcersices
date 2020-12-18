@@ -22,11 +22,14 @@ import javax.swing.DefaultComboBoxModel;
 
 public class SchoolApp extends JFrame {
 
+	SchoolManagement manager = new SchoolManagement();
 	private JPanel contentPane;
 	private JTextField txtIdStudent;
 	private JTextField txtStudentName;
 	private JTextField txtPayment;
 	private JTextField txtGetStudentId;
+	private JComboBox<String> cmbCareer = new JComboBox<String>();
+	private JTextArea taPaymentList = new JTextArea();
 
 	/**
 	 * Launch the application.
@@ -48,7 +51,7 @@ public class SchoolApp extends JFrame {
 	 * Create the frame.
 	 */
 	public SchoolApp() {
-		setResizable(false);
+		setResizable(true);
 		setTitle("Sistema de Pagos");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 654, 712);
@@ -65,7 +68,20 @@ public class SchoolApp extends JFrame {
 		JButton btnCreatePayment = new JButton("Generar Pago");
 		btnCreatePayment.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JOptionPane.showMessageDialog(null, "Hola Peggla");
+				Student studentObj = new Student();
+				studentObj.setIdStudent(Integer.parseInt(txtIdStudent.getText()));
+				studentObj.setStudentName(txtStudentName.getText());
+				studentObj.setCareer((String)cmbCareer.getSelectedItem());
+				studentObj.setPayment(Double.parseDouble(txtPayment.getText()));
+				
+				manager.addStudentToList(studentObj);
+				
+				JOptionPane.showMessageDialog(null, "Pago realizado con éxito!");
+				
+				txtIdStudent.setText(null);
+				txtStudentName.setText(null);
+				cmbCareer.setSelectedIndex(0);
+				txtPayment.setText(null);
 			}
 		});
 		btnCreatePayment.setBounds(277, 307, 156, 29);
@@ -107,17 +123,23 @@ public class SchoolApp extends JFrame {
 		txtPayment.setBounds(120, 303, 114, 33);
 		panel.add(txtPayment);
 		
-		JComboBox cmbCareer = new JComboBox();
+		cmbCareer = new JComboBox();
 		cmbCareer.setModel(new DefaultComboBoxModel(new String[] {"Selecciona Carrera ...", "Ing. en Sistemas ", "Lic. en Derecho", "Ing. Mecánica", "Lic. en Turismo", "Lic. en Administración"}));
 		cmbCareer.setBounds(120, 240, 205, 33);
 		panel.add(cmbCareer);
 		
-		JTextArea taPaymentList = new JTextArea();
+		taPaymentList = new JTextArea();
 		taPaymentList.setBackground(SystemColor.window);
 		taPaymentList.setBounds(68, 420, 462, 183);
 		panel.add(taPaymentList);
 		
 		JButton btnShowAllPayments = new JButton("Mostrar Todos");
+		btnShowAllPayments.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				taPaymentList.setText(null);
+				taPaymentList.setText(manager.showStudentList().toString());
+			}
+		});
 		btnShowAllPayments.setBounds(228, 615, 147, 25);
 		panel.add(btnShowAllPayments);
 		
@@ -135,6 +157,11 @@ public class SchoolApp extends JFrame {
 		panel.add(btnSearchStudentId);
 		
 		JButton btnCloseApp = new JButton("Salir");
+		btnCloseApp.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
 		btnCloseApp.setBounds(501, 631, 114, 29);
 		panel.add(btnCloseApp);
 		
