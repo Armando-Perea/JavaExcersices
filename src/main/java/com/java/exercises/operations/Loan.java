@@ -36,6 +36,7 @@ public class Loan {
 		result = objectLoan.getCalculateLoan(40000);
 		resultInterest = objectLoan.getCalculateInterest(result);
 		System.out.println("El prestamo es de : $" + result +" Con un interés de: $" + resultInterest);
+		
 
 	}
 }
