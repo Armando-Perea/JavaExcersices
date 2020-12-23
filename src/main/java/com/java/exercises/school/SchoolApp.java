@@ -7,8 +7,10 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import javax.swing.JLabel;
@@ -19,17 +21,25 @@ import javax.swing.JTextArea;
 import java.awt.SystemColor;
 import java.awt.Font;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 public class SchoolApp extends JFrame {
 
 	SchoolManagement manager = new SchoolManagement();
 	private JPanel contentPane;
+	
 	private JTextField txtIdStudent;
 	private JTextField txtStudentName;
 	private JTextField txtPayment;
 	private JTextField txtGetStudentId;
+	
 	private JComboBox<String> cmbCareer = new JComboBox<String>();
 	private JTextArea taPaymentList = new JTextArea();
+	
+	private JTable tableStudentPayments;
+	private JScrollPane spStudentPayments;
+	private DefaultTableModel tableModelStudentPayments;
 
 	/**
 	 * Launch the application.
@@ -128,16 +138,31 @@ public class SchoolApp extends JFrame {
 		cmbCareer.setBounds(120, 240, 205, 33);
 		panel.add(cmbCareer);
 		
-		taPaymentList = new JTextArea();
-		taPaymentList.setBackground(SystemColor.window);
-		taPaymentList.setBounds(68, 420, 462, 183);
-		panel.add(taPaymentList);
-		
 		JButton btnShowAllPayments = new JButton("Mostrar Todos");
 		btnShowAllPayments.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				taPaymentList.setText(null);
-				taPaymentList.setText(manager.showStudentList().toString());
+				
+				SchoolManagement schoolManagement = new SchoolManagement();
+				
+				String StudentColumns[] = { "Id", "Nombre", "Carrera", "Pago"};
+				tableModelStudentPayments = new DefaultTableModel(StudentColumns, 0);
+				tableStudentPayments = new JTable(tableModelStudentPayments);
+				tableStudentPayments.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+				
+				tableStudentPayments.getColumnModel().getColumn(0).setPreferredWidth(100);
+				tableStudentPayments.getColumnModel().getColumn(1).setPreferredWidth(100);
+				tableStudentPayments.getColumnModel().getColumn(2).setPreferredWidth(100);
+				tableStudentPayments.getColumnModel().getColumn(3).setPreferredWidth(100);
+				
+				List<Student> studentList = schoolManagement.showStudentList();
+				
+				for(Student student : studentList) {
+					Object[] studentItems = { student.getIdStudent(), student.getStudentName(),student.getCareer(), student.getPayment()};
+					tableModelStudentPayments.addRow(studentItems);
+				}
+				
+				spStudentPayments.setViewportView(tableStudentPayments);
+			
 			}
 		});
 		btnShowAllPayments.setBounds(228, 615, 147, 25);
@@ -153,6 +178,28 @@ public class SchoolApp extends JFrame {
 		panel.add(txtGetStudentId);
 		
 		JButton btnSearchStudentId = new JButton("Buscar");
+		btnSearchStudentId.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				SchoolManagement schoolManagement = new SchoolManagement();
+				
+				String StudentColumns[] = { "Id", "Nombre", "Carrera", "Pago"};
+				tableModelStudentPayments = new DefaultTableModel(StudentColumns, 0);
+				tableStudentPayments = new JTable(tableModelStudentPayments);
+				tableStudentPayments.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+				
+				tableStudentPayments.getColumnModel().getColumn(0).setPreferredWidth(100);
+				tableStudentPayments.getColumnModel().getColumn(1).setPreferredWidth(100);
+				tableStudentPayments.getColumnModel().getColumn(2).setPreferredWidth(100);
+				tableStudentPayments.getColumnModel().getColumn(3).setPreferredWidth(100);
+				
+				Student student = schoolManagement.searchStudentId(Integer.parseInt(txtGetStudentId.getText()));
+				
+				Object[] studentItems = { student.getIdStudent(), student.getStudentName(),student.getCareer(), student.getPayment()};
+				tableModelStudentPayments.addRow(studentItems);
+				spStudentPayments.setViewportView(tableStudentPayments);
+			}
+		});
 		btnSearchStudentId.setBounds(330, 383, 94, 25);
 		panel.add(btnSearchStudentId);
 		
@@ -174,5 +221,12 @@ public class SchoolApp extends JFrame {
 		lblControlDePagos.setFont(new Font("Dialog", Font.BOLD, 20));
 		lblControlDePagos.setBounds(213, 48, 222, 44);
 		panel.add(lblControlDePagos);
+		
+		spStudentPayments = new JScrollPane();
+		spStudentPayments.setBounds(46, 434, 550, 157);
+		panel.add(spStudentPayments);
+		
+		tableStudentPayments = new JTable();
+		spStudentPayments.setViewportView(tableStudentPayments);
 	}
 }
